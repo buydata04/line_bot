@@ -1,0 +1,11 @@
+# 忽略虛擬環境
+venv/
+
+# 忽略 IDE 設定檔案
+.idea/
+
+# 忽略 Python 暫存檔
+__pycache__/
+*.pyc
+*.pyo
+
