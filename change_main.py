@@ -13,7 +13,7 @@ user_list = [
     '1126934114860796869'
 ]
 
-if __name__ == '__main__':
+def run_exchange():
     findcode = Findcode()
     exchange = Exchange()
 
@@ -21,19 +21,17 @@ if __name__ == '__main__':
     codelist = findcode.fetch().filter()
     if not codelist:
         logging.info("無法獲取任何序號")
-    else:
-        # 開始兌換序號
-        for user in user_list:
-            logging.info(f"用戶: {user}")
-            print(f"用戶: {user}")
-            for code in codelist:
-                # logging.info(f"序號: {code}")
-                # print(f"序號: {code}")
+        return "無法獲取任何序號"
 
-                # 獲取兌換結果
-                result = exchange.fetch(user, code).filter()
+    result_str = "兌換結果:\n"
+    # 開始兌換序號
+    for user in user_list:
+        result_str += f"\n{user}\n"
+        for code in codelist:
+            # 獲取兌換結果
+            result = exchange.fetch(user, code).filter()
+            result_str += f"{code} - {result} / "
 
-                # 假設result返回的是 '重複領取' 或 '領取成功'，然後加上序號
-                print(f"兌換結果: {result} ({code})")
+        result_str += "\n"  # 進行換行處理
 
-                time.sleep(0.5)  # 延遲以避免伺服器過載
+    return result_str
