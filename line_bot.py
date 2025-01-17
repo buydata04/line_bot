@@ -11,3 +11,4 @@ if __name__ == "__main__":
     # 使用 Heroku 提供的 $PORT 來綁定服務
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
+
