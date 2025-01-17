@@ -1,6 +1,7 @@
+import os
 from flask import Flask, request, abort
-from line_bot_sdk import LineBotApi, WebhookHandler
-from line_bot_sdk.exceptions import InvalidSignatureError
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
 
 app = Flask(__name__)
 
