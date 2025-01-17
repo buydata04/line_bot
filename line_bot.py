@@ -22,15 +22,12 @@ handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
 # 使用者帳號
 user_list = [
-    '1126934135224009636',
-    '1126934187638915729',
-    '1126934135108928409',
-    '1126934114860796869'
+    '1126934135224009636'  # 可以根據需求添加其他用戶
 ]
 
 @app.route("/")
 def hello():
-    return "嗨, 我是機器人唷!"
+    return "Hello, this is your bot!"
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -52,7 +49,13 @@ def handle_message(event):
     # 獲取用戶的訊息
     user_message = event.message.text.strip()
 
-    if user_message.lower() == "兌換序號":
+    # 回應用戶說的內容
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text='您說的是: ' + user_message)
+    )
+
+    if user_message == "序號兌換":
         # 抓取序號
         findcode = Findcode()
         codelist = findcode.fetch().filter()
@@ -65,23 +68,20 @@ def handle_message(event):
 
         # 開始兌換序號
         exchange = Exchange()
-        response_text = ""
+        response_text = "兌換結果: "
         for code in codelist:
             for user in user_list:
                 result = exchange.fetch(user, code).filter()
-                response_text += f"序號: {code} - 兌換結果: {result}\n"
+                response_text += f"{code} - {result} / "  # 结果连在一起，以 / 分隔
                 time.sleep(0.5)  # 延遲以避免伺服器過載
+
+        # 移除最後的 " / "
+        response_text = response_text.rstrip(" / ")
 
         # 回應用戶兌換結果
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=response_text)
-        )
-    else:
-        # 如果用戶發送的訊息不是 "兌換序號"
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="請輸入 '兌換序號' 以開始兌換")
         )
 
 if __name__ == "__main__":
